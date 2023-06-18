@@ -1,58 +1,70 @@
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
-import { remark } from 'remark'
-import html from 'remark-html'
 
-const postsDirectory = path.join(process.cwd(), 'blogposts')
+import { BlogPost, Meta } from '@/types';
+import { compileMDX } from 'next-mdx-remote/rsc';
 
-export function getSortedPostsData() {
-    // Get file names under /posts
-    const fileNames= fs.readdirSync(postsDirectory);
-    const allPostsData: BlogPost[] = fileNames.map((fileName: string) => {
-        //Remove ".md" from file name to get the id
-        const id = fileName.replace(/\.md$/, '');
-
-        // Read markdown file as string
-        const fullPath = path.join(postsDirectory, fileName);
-        const fileContents = fs.readFileSync(fullPath, 'utf8');
-
-        //Parse the post metada section with gray-matter
-        const matterResult = matter(fileContents);
-
-        const blogPost: BlogPost = {
-            id,
-            title: matterResult.data.title,
-            date: matterResult.data.date
+type FileTree = {
+    "tree": [
+        {
+            "path": string
         }
-        return blogPost;
+    ]
+}
+
+export async function getPostByName(fileName: string): Promise<BlogPost | undefined>{
+    const res = await fetch(`https://raw.githubusercontent.com/nahuem/tech-blogs-mdx/main/${fileName}`, {
+        method: 'GET',
+        headers: {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            'X-GitHub-Api-Version': '2022-11-28',
+        }
     })
-    //Sort posts by date
-    return allPostsData.sort((a, b) => a.date < b.date ? 1 : -1)
+    if(!res.ok) return undefined
+
+    const rawMDX = await res.text();
+
+    if(rawMDX === '404: not Found') return undefined;
+
+    const { frontmatter, content } = await compileMDX<{title: string, date: string, tags: string[]}>({
+        source: rawMDX,
+        options: {
+            parseFrontmatter: true,
+        }
+    })
+
+    const id = fileName.replace(/\.mdx$/, '')
+
+    const blogPostObj: BlogPost = { meta: { id, title:frontmatter.title, date: frontmatter.date, tags: frontmatter.tags}, content}
+
+
+    return blogPostObj
+
 }
 
-export async function getPostData(id: string) {
-    const fullPath = path.join(postsDirectory, `${id}.md`);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
+export async function getPostsMeta(): Promise< Meta[] | undefined >{
+    const res = await fetch('https://api.github.com/repos/nahuem/tech-blogs-mdx/git/trees/main?recursive=1', {
+        method: 'GET',
+        headers: {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            'X-GitHub-Api-Version': '2022-11-28'
+        }
+    })
 
-    // Use gray-matter to parse the post metadata section
-    const matterResult = matter(fileContents);
+    if (!res.ok) return undefined
 
-    const processedContent = await remark()
-        .use(html)
-        .process(matterResult.content);
+    const repoFileTree: FileTree = await res.json();
 
-    const contentHtml = processedContent.toString();
+    const filesArray = repoFileTree.tree.map(obj => obj.path).filter(path => path.endsWith('.mdx'))
 
-    const blogPostWithHTML: BlogPost & { contentHtml: string } = {
-        id,
-        title: matterResult.data.title,
-        date: matterResult.data.date,
-        contentHtml,
+    const posts: Meta[] = []
+
+    for(const file of filesArray) {
+        const post = await getPostByName(file)
+        if(post) {
+            const { meta } = post
+            posts.push(meta)
+        }
     }
-
-    // Combine the data with the id
-    return blogPostWithHTML
+    return posts.sort((a , b) => a.date < b.date ? 1 : -1)
 }
-
-
