@@ -4,7 +4,9 @@ import getFormattedDate from '@/lib/getFormattedDate'
 import  { getPostsMeta, getPostByName } from '@/lib/posts'
 import { notFound } from "next/navigation"
 
-export const revalidate = 0;
+import 'highlight.js/styles/github-dark.css'
+
+export const revalidate = 10;
 
 type Props = {
     params: {
@@ -12,15 +14,15 @@ type Props = {
     }
 }
 
-// export async function generateStaticParams() {
-//     const posts = await getPostsMeta() // deduplicated!
+export async function generateStaticParams() {
+    const posts = await getPostsMeta() // deduplicated!
 
-//     if(!posts) return []
+    if(!posts) return []
 
-//     return posts.map((post) => ({
-//         postId: post.id
-//     }))
-// }
+    return posts.map((post) => ({
+        postId: post.id
+    }))
+}
 
 export async function generateMetadata({ params : { postId }}: Props) {
 
