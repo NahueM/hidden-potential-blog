@@ -1,8 +1,8 @@
 import { getPostsMeta } from '@/lib/posts';
-import ListItem from '@/app/components/ListItem';
+import ListItem from '@/app/[lang]/components/ListItem';
 
-export default async function Posts() {
-  const posts = await getPostsMeta()
+export default async function Posts({lang}: {lang: 'string'}) {
+  const posts = await getPostsMeta(lang)
 
   if(!posts) {
     return <p className="mt-10 text-center">Sorry, no posts available.</p>

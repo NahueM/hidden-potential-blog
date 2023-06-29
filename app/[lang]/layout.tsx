@@ -1,26 +1,28 @@
+'use client'
 import './globals.css'
 import Navbar from './components/Navbar';
-import { Metadata } from 'next';
+import { i18n } from '../../i18n-config'
 
-
-export const metadata: Metadata = {
-  title: "Tech Blog",
-  description: "Latest tech news ",
+export async function generateStaticParams() {
+  return i18n.locales.map((locale) => ({ lang: locale }))
 }
 
 export default function RootLayout({
   children,
+  params
 }: {
   children: React.ReactNode 
+  params: { lang: string }
 }) {
-  return (
-    <html lang="en">
-      <body className="dark:bg-slate-800">
+
+return (
+  <html lang={params.lang}>
+    <body className="dark:bg-slate-800">
         <Navbar />
         <main className="px-4 md:px-6 prose prose-xl prose-slate dark:prose-invert mx-auto">
           {children}
         </main>
-      </body>
-    </html>
-  )
+    </body>
+  </html>
+)
 }

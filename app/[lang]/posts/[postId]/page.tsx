@@ -5,6 +5,7 @@ import  { getPostsMeta, getPostByName } from '@/lib/posts'
 import { notFound } from "next/navigation"
 
 import 'highlight.js/styles/github-dark.css'
+import { BlogPost, Meta } from '@/types'
 
 export const revalidate = 10;
 
@@ -42,7 +43,7 @@ export default async function Post({ params : { postId }}: Props) {
 
     const post = await getPostByName(`${postId}.mdx`) //deduped!
 
-   if(!post) notFound()
+    if(!post) notFound()
 
     const { meta, content} = post
 
