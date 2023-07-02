@@ -1,17 +1,15 @@
 import Link from 'next/link'
-
-import getFormattedDate from '@/lib/getFormattedDate'
 import  { getPostsMeta, getPostByName } from '@/lib/posts'
 import { notFound } from "next/navigation"
 
 import 'highlight.js/styles/github-dark.css'
-import { BlogPost, Meta } from '@/types'
 
 export const revalidate = 10;
 
 type Props = {
     params: {
         postId: string
+        language: string
     }
 }
 
@@ -25,9 +23,9 @@ export async function generateStaticParams() {
     }))
 }
 
-export async function generateMetadata({ params : { postId }}: Props) {
+export async function generateMetadata({ params : { postId, language }}: Props) {
 
-    const post = await getPostByName(`${postId}.mdx`) //deduped!
+    const post = await getPostByName(`${language}/${postId}.mdx`) //deduped!
 
     if(!post) {
         return {
@@ -39,26 +37,21 @@ export async function generateMetadata({ params : { postId }}: Props) {
    }
 }
 
-export default async function Post({ params : { postId }}: Props) {
+export default async function Post({ params : { postId, language }}: Props) {
 
-    const post = await getPostByName(`${postId}.mdx`) //deduped!
+    const post = await getPostByName(`${language}/${postId}.mdx`) //deduped!
 
     if(!post) notFound()
 
     const { meta, content} = post
 
-    const pubDate = getFormattedDate(meta.date)
-
-    const tags = meta.tags.map((tag, i) => (
+    const tags = meta?.tags?.split(',').map((tag, i) => (
         <Link key={i} href={`/tags/${tag}`}>{tag}</Link>
     ))
+
   return (
-    <>
-        <h2 className="text-3xl mt-4 mb-0">{meta.title}</h2>
-        <p className="mt-0 text-sm">
-            {pubDate}
-        </p>
-        <article>
+    <div className="post">
+        <article className=''>
             {content}
         </article>
         <section>
@@ -70,6 +63,6 @@ export default async function Post({ params : { postId }}: Props) {
         <p className="mb-10">
             <Link href="/">← Back to home</Link>
         </p>
-    </>
+    </div>
   )
 }

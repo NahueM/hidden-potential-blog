@@ -1,3 +1,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.post {
+    max-width: 80%;
+    margin-top: 20px;
+    background-color: #374151;
+    padding: 40px 15px 0 15px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+}
+
+.post h1 {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.post h2 {
+    font-size: xx-large;
+}
+
+.post h1 a {
+    align-self: center;
+    margin: auto;
+}
+
+.post a {
+    text-decoration: none;
+}
+
+.post p {
+    font-size: larger;
+    text-align: justify;
+}

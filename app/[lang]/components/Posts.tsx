@@ -9,11 +9,8 @@ export default async function Posts({lang}: {lang: 'string'}) {
   }
 
   return (
-    <section className="mt-6 mx-auto max-w-2xl">
-        <h2 className="text-4xl font-bold dark:text-white/90">
-            Blog
-        </h2>
-        <ul className="w-full list-none p-0">
+    <section className="mx-auto w-full">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 p-2 md:p-6 bg-transparent"> 
             {posts.map(post =>(
                 <ListItem key={post.id} post={post} />
             ))}

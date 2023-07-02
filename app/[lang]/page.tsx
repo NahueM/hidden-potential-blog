@@ -9,16 +9,18 @@ export const revalidate = 86400;
 export default async function Home({params: { lang }} : {params: {lang: Locale}}) {
     
   const dictionary = await getDictionary(lang)
+
   return (
     <div className="mx-auto">
-      <LocaleSwitcher />
-      <MyProfilePic />
-      <p className="dark:text-white mt-12 mb-12 text-3xl text-center">
-        {dictionary?.greeting} 👋&nbsp;
-        <span className="whitespace-nowrap">
-          esto es <span className="font-bold"> Hidden Potential </span>.
-        </span>
-      </p>
+      <div className='w-full flex justify-end'>
+        <LocaleSwitcher lang={lang}/>
+      </div>
+      {/* <MyProfilePic /> */}
+      <div className='w-full flex justify-start'>
+        <p className="dark:text-white mt-4 mb-2 text-3xl text-center">
+          {dictionary?.recentPosts} 
+        </p>
+      </div>
       {/* @ts-expect-error Server Component */}
       <Posts lang={lang}/>
     </div>

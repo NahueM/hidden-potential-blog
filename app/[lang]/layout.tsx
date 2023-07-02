@@ -19,7 +19,7 @@ return (
   <html lang={params.lang}>
     <body className="dark:bg-slate-800">
         <Navbar />
-        <main className="px-4 md:px-6 prose prose-xl prose-slate dark:prose-invert mx-auto">
+        <main className="flex justify-center px-4 md:px-6 prose max-w-7xl prose-slate dark:prose-invert mx-auto">
           {children}
         </main>
     </body>

@@ -4,9 +4,10 @@ type Meta = {
     id: string,
     title: string,
     date: string,
-    tags: string[],
+    tags: string,
     lang: string,
-    description: string
+    description: string,
+    imgUrl: string
 }
 type BlogPost = {
     meta: Meta,

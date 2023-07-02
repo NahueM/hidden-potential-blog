@@ -17,11 +17,11 @@ type FileTree = {
 }
 
 export async function getPostByName(fileName: string): Promise<BlogPost | undefined>{
-    const res = await fetch(`https://raw.githubusercontent.com/nahuem/tech-blogs-mdx/main/${fileName}`, {
+    const res = await fetch(`https://api.github.com/repos/NahueM/tech-blogs-mdx/contents/${fileName}`, {
         method: 'GET',
         headers: {
-            Accept: 'application/vnd.github+json',
-            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            "Accept": "application/vnd.github.VERSION.raw",
+            "Authorization": `Bearer ${process.env.GITHUB_TOKEN}`,
             'X-GitHub-Api-Version': '2022-11-28',
         }
     })
@@ -31,7 +31,7 @@ export async function getPostByName(fileName: string): Promise<BlogPost | undefi
 
     if(rawMDX === '404: not Found') return undefined;
 
-    const { frontmatter, content } = await compileMDX<{title: string, date: string, tags: string[], lang: string, description: string}>({
+    const { frontmatter, content } = await compileMDX<{title: string, date: string, tags: string, lang: string, description: string, imgUrl: string}>({
         source: rawMDX,
         components: {
             Video,
@@ -59,6 +59,7 @@ export async function getPostByName(fileName: string): Promise<BlogPost | undefi
         date: frontmatter.date, 
         tags: frontmatter.tags,
         lang: frontmatter.lang,
+        imgUrl: frontmatter.imgUrl,
         description: frontmatter.description
     }, content}
 
@@ -77,7 +78,7 @@ export async function getPostsMeta(lang?: 'string' | null): Promise< Meta[] | un
             }
         })
         
-        if (!res.ok) return undefined
+    if (!res.ok) return undefined
 
     const repoFileTree: FileTree = await res.json();
 

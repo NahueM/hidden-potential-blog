@@ -1,10 +1,13 @@
 'use client'
+import { useState } from 'react';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
-import { usePathname } from 'next/navigation'
-import Link from 'next/link'
-import { i18n } from '../../../i18n-config'
+type Props = {
+  lang: string
+}
 
-export default function LocaleSwitcher() {
+export default function LocaleSwitcher({lang}: Props) {
   const pathName = usePathname()
   const redirectedPathName = (locale: string) => {
     if (!pathName) return '/'
@@ -14,17 +17,21 @@ export default function LocaleSwitcher() {
   }
 
   return (
-    <div>
-      <p>Locale switcher:</p>
-      <ul>
-        {i18n.locales.map((locale) => {
-          return (
-            <li key={locale}>
-              <Link href={redirectedPathName(locale)}>{locale}</Link>
-            </li>
-          )
-        })}
-      </ul>
+    <div className="inline-flex list-none items-center p-2 rounded-md cursor-pointer dark:text-gray-800">
+      <Link 
+        href={redirectedPathName('en')} 
+        key={'en'} 
+        className={`px-4 py-2 text-sm rounded-l-md no-underline ${lang === 'en' ? 'dark:bg-violet-600' : 'bg-gray-500'}`} 
+      >
+        {'en'}
+      </Link>
+      <Link 
+        href={redirectedPathName('es')} 
+        key={'es'} 
+        className={`px-4 py-2 text-sm rounded-r-md no-underline ${lang === 'es' ? 'dark:bg-violet-600':'bg-gray-500'}`} 
+      >
+        {'es'}
+      </Link>
     </div>
   )
 }
