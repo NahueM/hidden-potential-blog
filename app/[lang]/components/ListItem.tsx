@@ -30,7 +30,7 @@ export default function ListItem({ post }: Props) {
                         <div className='text-zinc-400'>{formattedDate}</div>
                         <div className="block ">
                                 <h1 className='text-lg font-bold text-indigo-500'>{title}</h1>
-                                <p className='mx-1 overflow-hidden overflow-ellipsis mb-2'>
+                                <p className='mx-1 overflow-hidden overflow-ellipsis mb-2 text-white'>
                                     {description}
                                 </p>
                         </div>
