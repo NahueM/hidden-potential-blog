@@ -17,7 +17,7 @@ export default async function Home({params: { lang }} : {params: {lang: Locale}}
       </div>
       {/* <MyProfilePic /> */}
       <div className='w-full flex justify-start'>
-        <p className="dark:text-white mt-4 mb-2 text-3xl text-center">
+        <p className="text-white mt-4 mb-2 text-3xl text-center">
           {dictionary?.recentPosts} 
         </p>
       </div>
