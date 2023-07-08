@@ -21,14 +21,14 @@ export default function LocaleSwitcher({lang}: Props) {
       <Link 
         href={redirectedPathName('en')} 
         key={'en'} 
-        className={`px-4 py-2 text-sm rounded-l-md no-underline ${lang === 'en' ? 'bg-violet-600' : 'bg-gray-500'}`} 
+        className={`text-white px-4 py-2 text-sm rounded-l-md no-underline ${lang === 'en' ? 'bg-violet-600' : 'bg-gray-500'}`} 
       >
         {'en'}
       </Link>
       <Link 
         href={redirectedPathName('es')} 
         key={'es'} 
-        className={`px-4 py-2 text-sm rounded-r-md no-underline ${lang === 'es' ? 'bg-violet-600':'bg-gray-500'}`} 
+        className={`text-white px-4 py-2 text-sm rounded-r-md no-underline ${lang === 'es' ? 'bg-violet-600':'bg-gray-500'}`} 
       >
         {'es'}
       </Link>
