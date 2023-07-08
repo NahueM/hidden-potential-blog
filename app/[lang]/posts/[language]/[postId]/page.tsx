@@ -3,6 +3,8 @@ import  { getPostsMeta, getPostByName } from '@/lib/posts'
 import { notFound } from "next/navigation"
 
 import 'highlight.js/styles/github-dark.css'
+import GoogleAddsense from '@/app/[lang]/components/GoogleAddsense';
+import Head from 'next/head';
 
 export const revalidate = 86400;
 
@@ -45,19 +47,26 @@ export default async function Post({ params : { postId, language }}: Props) {
 
     const { meta, content} = post
 
-    const tags = meta?.tags?.split(',').map((tag, i) => (
+    const {tags, title, description} = meta
+
+    const linkTags = tags?.split(',').map((tag, i) => (
         <Link key={i} href={`/tags/${tag}`}>{tag}</Link>
     ))
 
   return (
     <div className="post">
+        <Head>
+            <title>{title}</title>
+            <meta name="description" content={description}/>
+            <GoogleAddsense />
+		</Head>
         <article className=''>
             {content}
         </article>
         <section>
             <h3>Related:</h3>
             <div className="flex flex-row gap-4">
-                {tags}
+                {linkTags}
             </div>
         </section>
         <p className="mb-10">

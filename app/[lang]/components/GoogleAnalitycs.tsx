@@ -4,8 +4,6 @@ const GoogleAnalytics = ({ ga_id }:{ ga_id: string}) => (
         async
         src={`https://www.googletagmanager.com/gtag/js?id=${ga_id}`}
       ></script>
-      <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.GOOGLE_ADDSENSE_ID}`}
-     crossOrigin="anonymous"></script>
       <script
         dangerouslySetInnerHTML={{
           __html: `
